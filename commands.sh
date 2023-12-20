@@ -8,9 +8,11 @@ az deployment group create \
     --subscription udemy-courses \
     --resource-group bicep-course \
     --name deployment \
-    --mode Complete \
-    --template-file main.bicep
-
+    --template-file main.bicep \
+    --parameters @main.parameters.json
+    
+    #--what-if (show the changes)
+    # --mode Incremental \ Complete (destructive)
 
 az deployment group create --resource-group bicep-course --template-file main.bicep
 
