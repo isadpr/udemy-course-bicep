@@ -1,3 +1,6 @@
+@description('Tags for the resources')
+param tags object = {}
+
 @description('Name of the storage account')
 @minLength(3)
 @maxLength(24)
@@ -18,6 +21,7 @@ param storageAccountSku string
 @description('Location of the resources')
 param location string = 'westeurope'
 
+@description('Support HTTPS traffic only')
 param supportHttpsTraffic bool = true
 
 var storageAccountKind = 'StorageV2'
@@ -29,6 +33,7 @@ var storageAccountProperties = {
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
+  tags: tags
   location: location
   sku: {
     name: storageAccountSku
@@ -38,15 +43,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
 
 resource auditStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: auditStorageAccountName
+  tags: tags
   location: location
   sku: {
     name: storageAccountSku
   }
   kind: storageAccountKind
-  properties: {
-    minimumTlsVersion: storageAccountProperties.minimunTlsVersion
-    supportsHttpsTrafficOnly: storageAccountProperties.supportsHttpsTrafficOnly
-  }
+  properties: storageAccountProperties
 }
 
 output storageAccountName string = storageAccount.name
