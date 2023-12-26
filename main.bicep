@@ -21,39 +21,63 @@ param storageAccountSku string
 @description('Location of the resources')
 param location string = 'westeurope'
 
-@description('Support HTTPS traffic only')
-param supportHttpsTraffic bool = true
+// @description('Support HTTPS traffic only')
+// param supportHttpsTraffic bool = true
 
-var storageAccountKind = 'StorageV2'
+// var storageAccountKind = 'StorageV2'
 
-var storageAccountProperties = {
-  minimunTlsVersion: 'TLS1_2'
-  supportsHttpsTrafficOnly: supportHttpsTraffic
-}
+// var storageAccountProperties = {
+//   minimunTlsVersion: 'TLS1_2'
+//   supportsHttpsTrafficOnly: supportHttpsTraffic
+// }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
-  name: storageAccountName
-  tags: tags
-  location: location
-  sku: {
-    name: storageAccountSku
+module storageAccount 'modules/storage-account.bicep' = {
+  name: 'deploy-${storageAccountName}' 
+  params: {
+    location: location
+    tags: tags
+    storageAccountName: storageAccountName
+    storageAccountSku: storageAccountSku
   }
-  kind: storageAccountKind
 }
 
-resource auditStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
-  name: auditStorageAccountName
-  tags: tags
-  location: location
-  sku: {
-    name: storageAccountSku
+module auditStorageAccount 'modules/storage-account.bicep' = {
+  name: 'deploy-${auditStorageAccountName}' 
+  params: {
+    location: location
+    tags: tags
+    storageAccountName: storageAccountName
+    storageAccountSku: storageAccountSku
   }
-  kind: storageAccountKind
-  properties: storageAccountProperties
 }
 
-output storageAccountName string = storageAccount.name
-output auditStorageAccountName string = auditStorageAccount.name
 
-output storageAccountId string = storageAccount.id
-output auditStorageAccountId string = auditStorageAccount.id
+output storageAccountId string = storageAccount.outputs.storageAccountId
+output auditStorageAccountId string = auditStorageAccount.outputs.storageAccountId
+
+output storageAccountName string = storageAccount.outputs.storageAccountName
+output auditStorageAccountName string = auditStorageAccount.outputs.storageAccountName
+
+
+
+// resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+//   name: storageAccountName
+//   tags: tags
+//   location: location
+//   sku: {
+//     name: storageAccountSku
+//   }
+//   kind: storageAccountKind
+// }
+
+// resource auditStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+//   name: auditStorageAccountName
+//   tags: tags
+//   location: location
+//   sku: {
+//     name: storageAccountSku
+//   }
+//   kind: storageAccountKind
+//   properties: storageAccountProperties
+// }
+

@@ -17,3 +17,5 @@ az deployment group create \
 az deployment group create --resource-group bicep-course --template-file main.bicep
 
 az deployment group delete --name main.bicep --resource-group bicep-course
+
+az deployment group create --resource-group bicep-course --name deployment-test --template-file main.bicep --parameters @main.parameters.json

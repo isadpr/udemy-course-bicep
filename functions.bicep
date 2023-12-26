@@ -34,7 +34,11 @@ var unionArray = union(myArray, mySecondArray) //doesn't include duplicate value
 var resourceGroupName = resourceGroup().name
 var subscriptionId = subscription().id
 
+var storageAccountKey = storageAccount.listKeys().keys[0]
 
+//loading files
+var loadedJson = loadJsonContent('example.json')
+var jsonContent = loadedJson.storageAccounts[0].name
 
 @description('Tags for the resources')
 param tags object = {}
@@ -65,3 +69,4 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   }
   kind: storageAccountKind
 }
+
